@@ -15,7 +15,7 @@
     "gh-pages": "^6.1.1"
   },
   "dependencies": {
-    "@klinecharts/pro": "^0.1.1",
-    "klinecharts": "^9.8.6"
+    "@klinecharts/pro": "file:../klinecharts-pro",
+    "klinecharts": "file:../KLineChart"
   }
 }
