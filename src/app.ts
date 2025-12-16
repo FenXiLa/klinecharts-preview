@@ -1,4 +1,4 @@
-import { KLineChartPro, OKXDataFeeds, CCXTDataFeeds } from '@klinecharts/pro'
+import { KLineChartPro, OKXDataFeeds, LocalDataFeeds } from '@klinecharts/pro'
 
 export default function setupApp (root: HTMLDivElement) {
   let locale = 'zh-CN'
@@ -48,11 +48,27 @@ export default function setupApp (root: HTMLDivElement) {
       type: 'crypto'
     },
     period: { multiplier: 15, timespan: 'minute', text: '15m' },
-    subIndicators: ['VOL', 'MACD'],
-    // 使用 CCXT 数据源（推荐，自动处理格式转换）
-    datafeed: new CCXTDataFeeds('okx') // 使用 OKX 交易所，公共频道无需 API key
-    // 如果需要测试其他数据源，可以取消下面的注释：
+    // 配置可用的时间周期（根据数据目录中实际存在的数据）
+    periods: [
+      { multiplier: 5, timespan: 'minute', text: '5m' },
+      { multiplier: 15, timespan: 'minute', text: '15m' },
+      { multiplier: 30, timespan: 'minute', text: '30m' },
+      { multiplier: 1, timespan: 'hour', text: '1H' },
+      { multiplier: 2, timespan: 'hour', text: '2H' },
+      { multiplier: 4, timespan: 'hour', text: '4H' },
+      { multiplier: 8, timespan: 'hour', text: '8H' },
+      { multiplier: 12, timespan: 'hour', text: '12H' },
+      { multiplier: 1, timespan: 'day', text: 'D' }
+    ],
+    // 简化指标配置，避免 tooltip 错误
+    mainIndicators: ['MA'],
+    subIndicators: ['VOL'],
+    // 数据源选择（取消注释其中一个）：
+    // 1. 使用本地 Python 服务器（需要先启动 kline_data_server.py）
+    datafeed: new LocalDataFeeds('http://localhost:8000')
+    // 2. 使用 OKX 数据源（浏览器环境可用，公共频道无需 API key）
     // datafeed: new OKXDataFeeds()
+    // 3. 使用 Polygon.io 数据源（需要 API key）
     // datafeed: new DefaultDatafeed(import.meta.env.VITE_POLYGON_IO_API_KEY)
   }
   new KLineChartPro(options)
